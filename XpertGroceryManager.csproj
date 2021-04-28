@@ -24,6 +24,14 @@
     <Compile Remove="Migrations\20210427150534_AddProductData.Designer.cs" />
     <Compile Remove="Migrations\20210427152448_CreateFirstMigration.cs" />
     <Compile Remove="Migrations\20210427152448_CreateFirstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210427175009_CreateFirstMigration.cs" />
+    <Compile Remove="Migrations\20210427175009_CreateFirstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210428042908_CreateModelRelationships.cs" />
+    <Compile Remove="Migrations\20210428042908_CreateModelRelationships.Designer.cs" />
+    <Compile Remove="Migrations\20210428043033_FirstMigration.cs" />
+    <Compile Remove="Migrations\20210428043033_FirstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210428043129_FirstMigration.cs" />
+    <Compile Remove="Migrations\20210428043129_FirstMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

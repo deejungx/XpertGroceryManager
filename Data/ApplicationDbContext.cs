@@ -72,6 +72,22 @@ namespace XpertGroceryManager.Data
                     .HasForeignKey(ur => ur.RoleId)
                     .IsRequired();
             });
+
+            modelBuilder.Entity<Product>(p =>
+            {
+                // Each Role can have many entries in the UserRole join table
+                p.HasOne(e => e.Stock)
+                    .WithOne(e => e.Product)
+                    .HasForeignKey<Stock>(b => b.Id);
+            });
+
+            modelBuilder.Entity<Category>(c =>
+            {
+                // Each Role can have many entries in the UserRole join table
+                c.HasMany(e => e.Products)
+                    .WithOne(e => e.Category)
+                    .HasForeignKey(b => b.CategoryId);
+            });
         }
     }
 }

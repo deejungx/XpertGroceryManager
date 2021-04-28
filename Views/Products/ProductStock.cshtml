@@ -1,0 +1,93 @@
+﻿@model PaginatedList<XpertGroceryManager.Models.Product>
+
+@{
+    ViewData["Title"] = "Product Stock";
+}
+
+
+<div class="row">
+    <div class="col-sm-8">
+        <h1 class="mb-3" style="float: left;">Product Stock</h1>
+    </div>
+    <div class="col-sm-4">
+        <p class="add-btn-container">
+            <a class="btn btn-primary" role="button" asp-action="Create">Add a Purchase</a>
+        </p>
+    </div>
+</div>
+
+
+
+<div class="serachbox">
+    <form asp-action="ProductStock" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Find: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                <input type="submit" value="Search" class="btn btn-secondary" /> |
+                <a asp-action="ProductStock">Reset</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<table class="table table-hover table-striped">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">
+                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+            </th>
+            <th scope="col">
+                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["QuantitySortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Quantity</a>
+            </th>
+            <th scope="col">
+                Price
+            </th>
+            <th scope="col">
+                Category
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="ProductStock"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @prevDisabled">
+    Previous
+</a>
+<a asp-action="ProductStock"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @nextDisabled">
+    Next
+</a>

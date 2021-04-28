@@ -1,0 +1,55 @@
+﻿@model IEnumerable<XpertGroceryManager.Models.Sales>
+
+@{
+    ViewData["Title"] = "Sales";
+}
+
+<div class="inline-head">
+    <h1 class="mb-3">Sales</h1>
+    <p class="add-btn-container">
+        <a class="btn btn-primary" role="button" asp-action="Create">Add a Sales</a>
+    </p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalesDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                Total
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalesDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                <a class="badge badge-success action-button" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

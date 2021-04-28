@@ -338,16 +338,11 @@ namespace XpertGroceryManager.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SalesId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("PurchaseId");
-
-                    b.HasIndex("SalesId");
 
                     b.ToTable("PurchaseLineItem");
                 });
@@ -483,10 +478,6 @@ namespace XpertGroceryManager.Migrations
                         .HasForeignKey("PurchaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("XpertGroceryManager.Models.Sales", null)
-                        .WithMany("LineItems")
-                        .HasForeignKey("SalesId");
                 });
 
             modelBuilder.Entity("XpertGroceryManager.Models.Sales", b =>
@@ -507,7 +498,7 @@ namespace XpertGroceryManager.Migrations
                         .IsRequired();
 
                     b.HasOne("XpertGroceryManager.Models.Sales", "Sales")
-                        .WithMany()
+                        .WithMany("LineItems")
                         .HasForeignKey("SalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace XpertGroceryManager.Migrations
 {
-    public partial class CreateFirstMigration : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -241,24 +241,6 @@ namespace XpertGroceryManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stock",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stock", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Stock_Product_Id",
-                        column: x => x.Id,
-                        principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PurchaseLineItem",
                 columns: table => new
                 {
@@ -266,8 +248,7 @@ namespace XpertGroceryManager.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(nullable: false),
                     PurchaseId = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false),
-                    SalesId = table.Column<int>(nullable: true)
+                    ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,12 +265,24 @@ namespace XpertGroceryManager.Migrations
                         principalTable: "Purchase",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stock",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stock", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchaseLineItem_Sales_SalesId",
-                        column: x => x.SalesId,
-                        principalTable: "Sales",
+                        name: "FK_Stock_Product_Id",
+                        column: x => x.Id,
+                        principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -372,11 +365,6 @@ namespace XpertGroceryManager.Migrations
                 name: "IX_PurchaseLineItem_PurchaseId",
                 table: "PurchaseLineItem",
                 column: "PurchaseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseLineItem_SalesId",
-                table: "PurchaseLineItem",
-                column: "SalesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sales_CustomerId",

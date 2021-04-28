@@ -29,15 +29,18 @@ namespace XpertGroceryManager.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            var applicationDbContext = _context.Products.Include(p => p.Category);
 
             var products = from p in _context.Products
-                           select p;
+                select p;
+
             products = sortOrder switch
             {
                 "name_desc" => products.OrderByDescending(p => p.Name),
                 _ => products.OrderBy(p => p.Name),
             };
+
+            products = products.Include(p => p.Category);
+
             int pageSize = 12;
             return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
@@ -53,6 +56,7 @@ namespace XpertGroceryManager.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Stock)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -173,6 +177,56 @@ namespace XpertGroceryManager.Controllers
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Product Stock
+        [Authorize]
+        public async Task<IActionResult> ProductStock(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["QuantitySortParam"] = sortOrder == "Quantity" ? "quantity_desc" : "Quantity";
+            
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var products = from p in _context.Products
+                           where p.Stock != null
+                           select p;
+            var stock = from s in _context.Stocks
+                        select s;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString)
+                                       || p.Description.Contains(searchString));
+            }
+
+            products = sortOrder switch
+            {
+                "name_desc" => products.OrderByDescending(p => p.Name),
+                "Quantity" => products.OrderBy(p => p.Stock.Quantity),
+                "quantity_desc" => products.OrderByDescending(p => p.Stock.Quantity),
+                _ => products.OrderBy(p => p.Name),
+            };
+
+            products = products.Include(p => p.Category)
+                               .Include(p => p.Stock);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         private bool ProductExists(int id)
