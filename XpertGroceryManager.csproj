@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-XpertGroceryManager-48F6A04C-10C3-41C7-B7DC-9FA88F7018F6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426171351_add category model.cs" />
+    <Compile Remove="Data\Migrations\20210426171351_add category model.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210427034301_Add More Tables.cs" />
+    <Compile Remove="Data\Migrations\20210427034301_Add More Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210427034606_CreateProductManagementModels.cs" />
+    <Compile Remove="Data\Migrations\20210427034606_CreateProductManagementModels.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210427040347_UserRoles.cs" />
+    <Compile Remove="Data\Migrations\20210427040347_UserRoles.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210427040520_UserRoles.cs" />
+    <Compile Remove="Data\Migrations\20210427040520_UserRoles.Designer.cs" />
+    <Compile Remove="Migrations\20210427054453_InititalMigration.cs" />
+    <Compile Remove="Migrations\20210427054453_InititalMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210427150534_AddProductData.cs" />
+    <Compile Remove="Migrations\20210427150534_AddProductData.Designer.cs" />
+    <Compile Remove="Migrations\20210427152448_CreateFirstMigration.cs" />
+    <Compile Remove="Migrations\20210427152448_CreateFirstMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0-preview.1.21102.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.13" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+</Project>

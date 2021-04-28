@@ -1,0 +1,62 @@
+﻿@model IEnumerable<XpertGroceryManager.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="inline-head">
+    <h1 class="mb-3">Customers</h1>
+    <p class="add-btn-container">
+        <a class="btn btn-primary" role="button" asp-action="Create">Add a Customer</a>
+    </p>
+</div>
+
+<table class="table table-hover table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.MemberNumber)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.MemberType)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <a class="badge badge-success action-button" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

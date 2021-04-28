@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xpert Grocery Manager | @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">XpertGroceryManager</a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a asp-area="" asp-controller="Categories" asp-action="Index" class="list-group-item list-group-item-action bg-light">Category</a>
+                <a asp-area="" asp-controller="Products" asp-action="Index" class="list-group-item list-group-item-action bg-light">Products</a>
+                <a asp-area="" asp-controller="Customers" asp-action="Index" class="list-group-item list-group-item-action bg-light">Customers</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+                <button id="menu-toggle">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <partial name="_LoginPartial" />
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <main role="main" class="p-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2021 - Xpert Grocery Manager - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+    <!-- Menu Toggle Script -->
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+</body>
+</html>

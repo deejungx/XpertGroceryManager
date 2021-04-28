@@ -1,0 +1,43 @@
+﻿@model IEnumerable<XpertGroceryManager.Models.Category>
+
+@{
+    ViewData["Title"] = "Product Category";
+}
+
+<div class="inline-head">
+    <h1 class="mb-3">Product Categories</h1>
+    <p class="add-btn-container">
+        <a class="btn btn-primary" role="button" asp-action="Create">Add a Category</a>
+    </p>
+</div>
+
+<table class="table table-hover table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a class="badge badge-success action-button" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
