@@ -205,8 +205,6 @@ namespace XpertGroceryManager.Controllers
             var products = from p in _context.Products
                            where p.Stock != null
                            select p;
-            var stock = from s in _context.Stocks
-                        select s;
 
             if (!string.IsNullOrEmpty(searchString))
             {

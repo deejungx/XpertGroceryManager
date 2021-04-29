@@ -23,12 +23,15 @@ namespace XpertGroceryManager.Models
         [NotMapped]
         public decimal Total => GetTotal(LineItems);
 
-        private static decimal GetTotal(ICollection<SalesLineItem> lineItems)
+        private static decimal GetTotal(ICollection<SalesLineItem> LineItems)
         {
             var total = 0.00m;
-            foreach (SalesLineItem item in lineItems) {
-                var lineTotal = item.Quantity * item.Product.Price;
-                total = total + lineTotal;
+            if (LineItems != null)
+            {
+                foreach (SalesLineItem item in LineItems) {
+                    var lineTotal = item.Quantity * item.Product.Price;
+                    total += lineTotal;
+                }
             }
             return total;
         }

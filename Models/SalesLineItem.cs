@@ -15,7 +15,7 @@ namespace XpertGroceryManager.Models
         [Range(0, 999)]
         public int Quantity { get; set; }
 
-        public int SalesId { get; set; }
+        public int? SalesId { get; set; }
         public virtual Sales Sales { get; set; }
 
         public int ProductId { get; set; }

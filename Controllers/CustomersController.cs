@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using XpertGroceryManager.Data;
 using XpertGroceryManager.Models;
+using XpertGroceryManager.Utils;
 
 namespace XpertGroceryManager.Controllers
 {
@@ -22,9 +23,44 @@ namespace XpertGroceryManager.Controllers
 
         // GET: Customers
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            return View(await _context.Customers.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            var customers = from c in _context.Customers
+                select c;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(c => c.Name.Contains(searchString)
+                                       || c.MemberNumber.StartsWith(searchString));
+            }
+
+            customers = sortOrder switch
+            {
+                "name_desc" => customers.OrderByDescending(p => p.Name),
+                _ => customers.OrderBy(p => p.Name),
+            };
+
+            customers = customers.Include(c => c.Sales);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Customer>.CreateAsync(customers.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Customers/Details/5
@@ -35,9 +71,26 @@ namespace XpertGroceryManager.Controllers
             {
                 return NotFound();
             }
-
+            var now = DateTime.UtcNow;
+            var threshold = now.AddDays(-30);
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(c => c.Sales)
+                    .ThenInclude(s => s.LineItems)
+                        .ThenInclude(li => li.Product)
+                .Select(c => new Customer()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    MemberNumber = c.MemberNumber,
+                    MemberType = c.MemberType,
+                    Phone = c.Phone,
+                    Address = c.Address,
+                    Email = c.Email,
+                    Sales = (ICollection<Sales>)c.Sales.Where(s => s.SalesDate >= threshold)
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (customer == null)
             {
                 return NotFound();

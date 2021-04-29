@@ -1,35 +1,55 @@
 ﻿@model XpertGroceryManager.Models.Sales
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Sales";
 }
 
-<h1>Create</h1>
+<h1>Add a Sales</h1>
 
-<h4>Sales</h4>
+<p>Create a new sales entry for a customer.</p>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="SalesDate" class="control-label"></label>
                 <input asp-for="SalesDate" class="form-control" />
                 <span asp-validation-for="SalesDate" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+                <label asp-for="Customer" class="control-label"></label>
+                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId">
+                    <option value="">-- Select Customer --</option>
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger" />
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                        <tr>
+                            @{
+                                List<XpertGroceryManager.Models.ViewModels.LineItemProductData> products = ViewBag.Products;
+
+                                
+                            @:</tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-dark" role="button" asp-action="Index">Back</a>
 </div>
 
 @section Scripts {
