@@ -10,8 +10,8 @@ using XpertGroceryManager.Data;
 namespace XpertGroceryManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210428114130_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20210429042241_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -382,7 +382,7 @@ namespace XpertGroceryManager.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SalesId")
+                    b.Property<int?>("SalesId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -501,9 +501,7 @@ namespace XpertGroceryManager.Migrations
 
                     b.HasOne("XpertGroceryManager.Models.Sales", "Sales")
                         .WithMany("LineItems")
-                        .HasForeignKey("SalesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SalesId");
                 });
 
             modelBuilder.Entity("XpertGroceryManager.Models.Stock", b =>

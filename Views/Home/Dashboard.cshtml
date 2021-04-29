@@ -1,48 +1,61 @@
 ﻿@model PaginatedList<XpertGroceryManager.Models.Product>
 
 @{
-    ViewData["Title"] = "Product Stock";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="row mb-3">
-    <div class="col-sm-8">
-        <h1>Product Stock</h1>
-    </div>
-    <div class="col-sm-4">
-        <p class="add-btn-container">
-            <a class="btn btn-primary" role="button" asp-action="Create">Add a Purchase</a>
-        </p>
-    </div>
+
+<div>
+    <h1 class="mb-3">Dashboard</h1>
 </div>
 
 <div class="row mb-3">
-    <div class="col-sm-8">
-        <p>List of products currently in stock.</p>
-    </div>
-</div>
-
-
-
-<div class="serachbox">
-    <form asp-action="ProductStock" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Find: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-                <input type="submit" value="Search" class="btn btn-secondary" />
-                <a asp-action="ProductStock">Reset</a>
-            </p>
+    <div class="col-md-3">
+        <div class="card-counter success">
+            <i class="fa fa-box-open"></i>
+            <span class="count-numbers">@ViewData["ProductCount"]</span>
+            <span class="count-name">Products</span>
         </div>
-    </form>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-counter info">
+            <i class="fa fa-users"></i>
+            <span class="count-numbers">@ViewData["CustomerCount"]</span>
+            <span class="count-name">Customers</span>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-counter primary">
+            <i class="fa fa-rupee-sign"></i>
+            <span class="count-numbers">-</span>
+            <span class="count-name">Revenue</span>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-counter danger">
+            <i class="fa fa-receipt"></i>
+            <span class="count-numbers">-</span>
+            <span class="count-name">Expenditure</span>
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    <hr />
+    <h3>These items are currently low on stock!</h3>
 </div>
 
 <table class="table table-hover table-striped">
     <thead class="thead-light">
         <tr>
             <th scope="col">
-                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                <a asp-action="Dashboard" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
             </th>
             <th scope="col">
-                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["QuantitySortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Quantity</a>
+                <a asp-action="Dashboard" asp-route-sortOrder="@ViewData["QuantitySortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Quantity</a>
             </th>
             <th scope="col">
                 Price
@@ -50,7 +63,6 @@
             <th scope="col">
                 Category
             </th>
-            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -69,9 +81,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
-                <td>
-                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>
             </tr>
         }
     </tbody>
@@ -82,14 +91,14 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="ProductStock"
+<a asp-action="Dashboard"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-secondary @prevDisabled">
     Previous
 </a>
-<a asp-action="ProductStock"
+<a asp-action="Dashboard"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"

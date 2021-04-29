@@ -1,51 +1,39 @@
 ﻿@model PaginatedList<XpertGroceryManager.Models.Product>
 
 @{
-    ViewData["Title"] = "Product Stock";
+    ViewData["Title"] = "Stock Clearance";
 }
 
-<div class="row mb-3">
-    <div class="col-sm-8">
-        <h1>Product Stock</h1>
-    </div>
-    <div class="col-sm-4">
-        <p class="add-btn-container">
-            <a class="btn btn-primary" role="button" asp-action="Create">Add a Purchase</a>
-        </p>
-    </div>
-</div>
 
 <div class="row mb-3">
     <div class="col-sm-8">
-        <p>List of products currently in stock.</p>
+        <h1>Stock Clearance</h1>
+    </div>
+    <div class="col-sm-4 add-btn-container">
+            <form asp-action="ClearStock">
+                <input type="submit" value="Delete all" class="btn btn-outline-danger" />
+            </form>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-8">
+        <p>These products have been in stock for more than 6 Months.</p>
     </div>
 </div>
 
 
-
-<div class="serachbox">
-    <form asp-action="ProductStock" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Find: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-                <input type="submit" value="Search" class="btn btn-secondary" />
-                <a asp-action="ProductStock">Reset</a>
-            </p>
-        </div>
-    </form>
-</div>
-
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped mb-3">
     <thead class="thead-light">
         <tr>
             <th scope="col">
-                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                <a asp-action="StockClearance" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
             </th>
             <th scope="col">
-                <a asp-action="ProductStock" asp-route-sortOrder="@ViewData["QuantitySortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Quantity</a>
+                Quantity
             </th>
             <th scope="col">
-                Price
+                Date
             </th>
             <th scope="col">
                 Category
@@ -54,6 +42,12 @@
         </tr>
     </thead>
     <tbody>
+        @if (!Model.Any())
+        {
+        <tr>
+            <td colspan="5" class="mt-3">You don't have any products that were purchased earlier than 6 months.</td>
+        </tr>
+        }
         @foreach (var item in Model)
         {
             <tr>
@@ -64,13 +58,13 @@
                     @Html.DisplayFor(modelItem => item.Stock.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => item.PurchaseLineItems.First().Purchase.PurchaseDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
                 <td>
-                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -82,14 +76,14 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="ProductStock"
+<a asp-action="StockClearance"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-secondary @prevDisabled">
     Previous
 </a>
-<a asp-action="ProductStock"
+<a asp-action="StockClearance"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace XpertGroceryManager.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -292,7 +292,7 @@ namespace XpertGroceryManager.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(nullable: false),
-                    SalesId = table.Column<int>(nullable: false),
+                    SalesId = table.Column<int>(nullable: true),
                     ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -309,7 +309,7 @@ namespace XpertGroceryManager.Migrations
                         column: x => x.SalesId,
                         principalTable: "Sales",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

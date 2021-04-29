@@ -72,7 +72,7 @@ namespace XpertGroceryManager.Controllers
                 return NotFound();
             }
             var now = DateTime.UtcNow;
-            var threshold = now.AddDays(-30);
+            var threshold = now.AddDays(-31);
             var customer = await _context.Customers
                 .Include(c => c.Sales)
                     .ThenInclude(s => s.LineItems)
@@ -205,6 +205,38 @@ namespace XpertGroceryManager.Controllers
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Inactive Customers
+        [Authorize]
+        public async Task<IActionResult> InactiveCustomers(
+            string sortOrder,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var now = DateTime.UtcNow;
+            var threshold = now.AddDays(-31);
+
+            pageNumber = 1;
+
+            var customers = from c in _context.Customers
+                            where c.Sales.Any()
+                            select c;
+
+            customers = customers.Where(c => c.Sales.OrderByDescending(s => s.SalesDate).First().SalesDate <= threshold);
+
+            customers = sortOrder switch
+            {
+                "name_desc" => customers.OrderByDescending(p => p.Name),
+                _ => customers.OrderBy(p => p.Name),
+            };
+
+            customers = customers.Include(c => c.Sales);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Customer>.CreateAsync(customers.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         private bool CustomerExists(int id)

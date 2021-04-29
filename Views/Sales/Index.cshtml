@@ -4,11 +4,19 @@
     ViewData["Title"] = "Sales";
 }
 
-<div class="inline-head">
-    <h1 class="mb-3">Sales</h1>
-    <p class="add-btn-container">
-        <a class="btn btn-primary" role="button" asp-action="Create">Add a Sales</a>
-    </p>
+<div class="row mb-3">
+    <div class="col-sm-8">
+        <h1>Sales</h1>
+    </div>
+    <div class="col-sm-4 add-btn-container">
+        <a class="btn btn-primary" role="button" asp-action="Create">Add a Sale</a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-8">
+        <p>List of Sales.</p>
+    </div>
 </div>
 
 <table class="table">

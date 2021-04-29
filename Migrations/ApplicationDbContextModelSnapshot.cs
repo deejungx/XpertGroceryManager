@@ -380,7 +380,7 @@ namespace XpertGroceryManager.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SalesId")
+                    b.Property<int?>("SalesId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -499,9 +499,7 @@ namespace XpertGroceryManager.Migrations
 
                     b.HasOne("XpertGroceryManager.Models.Sales", "Sales")
                         .WithMany("LineItems")
-                        .HasForeignKey("SalesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SalesId");
                 });
 
             modelBuilder.Entity("XpertGroceryManager.Models.Stock", b =>

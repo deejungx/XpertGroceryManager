@@ -1,49 +1,34 @@
 ﻿@model PaginatedList<XpertGroceryManager.Models.Customer>
 
 @{
-    ViewData["Title"] = "Customers";
+    ViewData["Title"] = "Inactive Customers";
 }
 
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="mb-3" style="float: left;">Customers</h1>
+        <h1 class="mb-3" style="float: left;">Inactive Customers</h1>
     </div>
     <div class="col-sm-4">
-        <p class="add-btn-container">
-            <a class="btn btn-primary" role="button" asp-action="Create">Add a Customer</a>
-        </p>
     </div>
 </div>
 
 <div class="row mb-3">
     <div class="col-sm-8">
-        <p>List of customer records maintained for product sales.</p>
+        <p>List of customers who haven't purchased anything in last 31 days.</p>
     </div>
 </div>
 
-<div class="searchbox">
-    <form asp-action="Index" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Find: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-                <input type="submit" value="Search" class="btn btn-secondary" />
-                <a asp-action="Index">Reset</a>
-            </p>
-        </div>
-    </form>
-</div>
-
 <table class="table table-hover table-striped">
-    <thead class="thead-dark">
+    <thead class="thead-light">
         <tr>
             <th scope="col">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                <a asp-action="InactiveCustomers" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
             </th>
             <th scope="col">
                 Member #
             </th>
             <th scope="col">
-                Member Type
+                Last purchase
             </th>
             <th scope="col">
                 Phone
@@ -65,7 +50,7 @@
                     @Html.DisplayFor(modelItem => item.MemberNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MemberType)
+                    @Html.DisplayFor(modelItem => item.Sales.OrderByDescending(s => s.SalesDate).First().SalesDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Phone)
@@ -88,14 +73,14 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="Index"
+<a asp-action="InactiveCustomers"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-secondary @prevDisabled">
     Previous
 </a>
-<a asp-action="Index"
+<a asp-action="InactiveCustomers"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"

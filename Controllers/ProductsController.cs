@@ -157,8 +157,12 @@ namespace XpertGroceryManager.Controllers
             }
 
             var product = await _context.Products
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                            .Include(p => p.Category)
+                            .Include(p => p.Stock)
+                            .Include(p => p.PurchaseLineItems)
+                                .ThenInclude(li => li.Purchase)
+                            .FirstOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -173,7 +177,16 @@ namespace XpertGroceryManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            Product product = await _context.Products
+                .Include(s => s.Stock)
+                .SingleAsync(i => i.Id == id);
+
+            var stock = await _context.Stocks
+                .Where(s => s.Id == id)
+                .ToListAsync();
+
+            stock.ForEach(s => s.Quantity = 0);
+
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -203,8 +216,9 @@ namespace XpertGroceryManager.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var products = from p in _context.Products
-                           where p.Stock != null
                            select p;
+
+            products = products.Where(p => p.Stock != null && p.Stock.Quantity != 0);
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -222,6 +236,189 @@ namespace XpertGroceryManager.Controllers
 
             products = products.Include(p => p.Category)
                                .Include(p => p.Stock);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+        // GET: Stock Clearance
+        [Authorize]
+        public async Task<IActionResult> StockClearance(
+            string sortOrder,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var now = DateTime.UtcNow;
+            var threshold = now.AddDays(-180);
+
+            var products = from p in _context.Products
+                            select p;
+
+            var purchases = from p in _context.Purchases
+                            where p.PurchaseDate <= threshold
+                            select p;
+
+            products = products
+                        .Where(p => p.PurchaseLineItems
+                                        .Any(l => l.Purchase.PurchaseDate <= threshold))
+                        .Where(p => p.Stock.Quantity != 0);
+
+            products = sortOrder switch
+            {
+                "name_desc" => products.OrderByDescending(p => p.Name),
+                _ => products.OrderBy(p => p.Name),
+            };
+
+            products = products
+                        .Include(p => p.Category)
+                        .Include(p => p.Stock)
+                        .Include(p => p.PurchaseLineItems)
+                            .ThenInclude(li => li.Purchase);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+        // POST: Products/Delete/Clearance
+        [Authorize]
+        [HttpPost, ActionName("ClearStock")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StockClearanceConfirmed()
+        {
+            var now = DateTime.UtcNow;
+            var threshold = now.AddDays(-180);
+
+            var products = from p in _context.Products
+                            select p;
+            var stocks = from s in _context.Stocks
+                            select s;
+
+            products = products
+                        .Where(p => p.PurchaseLineItems
+                                        .Any(l => l.Purchase.PurchaseDate <= threshold));
+
+            foreach (var product in products)
+            {
+                stocks.First(s => s.Id == product.Id).Quantity = 0;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(StockClearance));
+        }
+
+        // GET: Out of Stock Products
+        [Authorize]
+        public async Task<IActionResult> OutOfStock(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["QuantitySortParam"] = sortOrder == "Quantity" ? "quantity_desc" : "Quantity";
+            ViewData["DateSortParam"] = sortOrder == "Date" ? "date_desc" : "Date";
+            
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var products = from p in _context.Products
+                           where p.PurchaseLineItems.Any()
+                           select p;
+
+            products = products.Where(p => p.Stock == null || p.Stock.Quantity <= 10);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString)
+                                       || p.Description.Contains(searchString));
+            }
+
+            products = sortOrder switch
+            {
+                "name_desc" => products.OrderByDescending(p => p.Name),
+                "Quantity" => products.OrderBy(p => p.Stock.Quantity),
+                "quantity_desc" => products.OrderByDescending(p => p.Stock.Quantity),
+                "Date" => products.OrderBy(p => p.PurchaseLineItems.First().Purchase.PurchaseDate),
+                "date_desc" => products.OrderByDescending(p => p.PurchaseLineItems.First().Purchase.PurchaseDate),
+                _ => products.OrderBy(p => p.Name)
+                             .OrderByDescending(p => p.Stock.Quantity)
+                             .OrderByDescending(p => p.PurchaseLineItems.First().Purchase.PurchaseDate),
+            };
+
+            products = products
+                        .Include(p => p.Category)
+                        .Include(p => p.Stock)
+                        .Include(p => p.PurchaseLineItems)
+                            .ThenInclude(li => li.Purchase);
+
+            int pageSize = 12;
+            return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+        // GET: Unsold Products
+        [Authorize]
+        public async Task<IActionResult> UnsoldProducts(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["QuantitySortParam"] = sortOrder == "Quantity" ? "quantity_desc" : "Quantity";
+            var now = DateTime.UtcNow;
+            var threshold = now.AddDays(-31);
+            
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var products = from p in _context.Products
+                           select p;
+
+            products = products.Where(p => p.Stock != null && p.Stock.Quantity != 0);
+            products = products
+                        .Where(p => !p.SalesLineItems.Any() || p.SalesLineItems
+                        .OrderByDescending(s => s.Sales.SalesDate)
+                        .First().Sales.SalesDate <= threshold);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString)
+                                       || p.Description.Contains(searchString));
+            }
+
+            products = sortOrder switch
+            {
+                "name_desc" => products.OrderByDescending(p => p.Name),
+                "Quantity" => products.OrderBy(p => p.Stock.Quantity),
+                "quantity_desc" => products.OrderByDescending(p => p.Stock.Quantity),
+                _ => products.OrderBy(p => p.Name),
+            };
+
+            products = products
+                        .Include(p => p.Category)
+                        .Include(p => p.Stock)
+                        .Include(p => p.SalesLineItems)
+                            .ThenInclude(li => li.Sales);
 
             int pageSize = 12;
             return View(await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize));

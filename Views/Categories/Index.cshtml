@@ -4,11 +4,21 @@
     ViewData["Title"] = "Product Category";
 }
 
-<div class="inline-head">
-    <h1 class="mb-3">Product Categories</h1>
-    <p class="add-btn-container">
-        <a class="btn btn-primary" role="button" asp-action="Create">Add a Category</a>
-    </p>
+<div class="row">
+    <div class="col-sm-8">
+        <h1 class="mb-3" style="float: left;">Product Categories</h1>
+    </div>
+    <div class="col-sm-4">
+        <p class="add-btn-container">
+            <a class="btn btn-primary" role="button" asp-action="Create">Add a Category</a>
+        </p>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-8">
+        <p>List of categories used to label products.</p>
+    </div>
 </div>
 
 <table class="table table-hover table-striped">

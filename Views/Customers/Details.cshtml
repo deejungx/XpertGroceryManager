@@ -9,45 +9,92 @@
 <div>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MemberNumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MemberNumber)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MemberType)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MemberType)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Phone)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Phone)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Address)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
 </div>
+    <hr />
+    <h3 class="mb-2">
+        Purchases 
+        <small class="text-muted">In Last 31 Days</small></h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Date</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var salesItem in Model.Sales)
+            {
+                <tr>
+                    <th scope="row">@Html.DisplayFor(modelItem => salesItem.Id)</th>
+                    <td>@Html.DisplayFor(modelItem => salesItem.SalesDate)</td>
+                    <td>
+                        <table class="table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Unit Price</th>
+                                    <th scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var lineItem in salesItem.LineItems)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => lineItem.Product.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => lineItem.Product.Price)</td>
+                                        <td>@Html.DisplayFor(modelItem => lineItem.Quantity)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 <div>
-    <a class="btn btn-primary" role="button" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+
+</div>
+
+<div>
+    <a class="btn btn-primary" role="button" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     <a class="btn btn-dark" role="button" asp-action="Index">Back to List</a>
 </div>

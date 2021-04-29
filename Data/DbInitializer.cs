@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using XpertGroceryManager.Models;
 
 namespace XpertGroceryManager.Data
@@ -208,6 +209,142 @@ namespace XpertGroceryManager.Data
                 context.SaveChanges();
             }
 
+            if (!context.Sales.Any())
+            {
+                var sales = new Sales[]
+                {
+                    new Sales{SalesDate= new DateTime(2021, 4, 15), CustomerId=1},
+                    new Sales{SalesDate= new DateTime(2021, 4, 8), CustomerId=7},
+                    new Sales{SalesDate= new DateTime(2021, 4, 12), CustomerId=4},
+                    new Sales{SalesDate= new DateTime(2021, 3, 29), CustomerId=2},
+                    new Sales{SalesDate= new DateTime(2021, 3, 30), CustomerId=2},
+                    new Sales{SalesDate= new DateTime(2021, 2, 5), CustomerId=5},
+                    new Sales{SalesDate= new DateTime(2021, 4, 21), CustomerId=3},
+                    new Sales{SalesDate= new DateTime(2021, 4, 25), CustomerId=6},
+                    new Sales{SalesDate= new DateTime(2021, 4, 26), CustomerId=2},
+                    new Sales{SalesDate= new DateTime(2021, 2, 3), CustomerId=7},
+                };
+
+                foreach (Sales s in sales)
+                {
+                    context.Sales.Add(s);
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.SalesLineItems.Any())
+            {
+                var salesLineItems = new SalesLineItem[]
+                {
+                    new SalesLineItem{Quantity=2, ProductId=5, SalesId=1},
+                    new SalesLineItem{Quantity=1, ProductId=10, SalesId=2},
+                    new SalesLineItem{Quantity=1, ProductId=12, SalesId=2},
+                    new SalesLineItem{Quantity=2, ProductId=50, SalesId=3},
+                    new SalesLineItem{Quantity=10, ProductId=14, SalesId=3},
+                    new SalesLineItem{Quantity=1, ProductId=25, SalesId=3},
+                    new SalesLineItem{Quantity=2, ProductId=31, SalesId=4},
+                    new SalesLineItem{Quantity=1, ProductId=42, SalesId=4},
+                    new SalesLineItem{Quantity=5, ProductId=16, SalesId=5},
+                    new SalesLineItem{Quantity=12, ProductId=17, SalesId=5},
+                    new SalesLineItem{Quantity=3, ProductId=8, SalesId=5},
+                    new SalesLineItem{Quantity=6, ProductId=61, SalesId=6},
+                    new SalesLineItem{Quantity=2, ProductId=55, SalesId=6},
+                    new SalesLineItem{Quantity=1, ProductId=34, SalesId=7},
+                    new SalesLineItem{Quantity=1, ProductId=56, SalesId=7},
+                    new SalesLineItem{Quantity=2, ProductId=23, SalesId=7},
+                    new SalesLineItem{Quantity=2, ProductId=29, SalesId=7},
+                    new SalesLineItem{Quantity=3, ProductId=19, SalesId=8},
+                    new SalesLineItem{Quantity=2, ProductId=18, SalesId=9},
+                    new SalesLineItem{Quantity=5, ProductId=4, SalesId=9},
+                    new SalesLineItem{Quantity=2, ProductId=2, SalesId=9},
+                    new SalesLineItem{Quantity=5, ProductId=39, SalesId=10},
+                    new SalesLineItem{Quantity=1, ProductId=58, SalesId=10},
+                };
+
+                foreach (SalesLineItem s in salesLineItems)
+                {
+                    context.SalesLineItems.Add(s);
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.Purchases.Any())
+            {
+                var purchases = new Purchase[]
+                {
+                    new Purchase{PurchaseDate=new DateTime(2020, 8, 12), Vendor="ABC Suppliers"},
+                    new Purchase{PurchaseDate=new DateTime(2020, 12, 1), Vendor="Zero Distributors"},
+                    new Purchase{PurchaseDate=new DateTime(2021, 1, 10), Vendor="OK Pvt. Ltd."},
+                    new Purchase{PurchaseDate=new DateTime(2021, 2, 9), Vendor="Index Distributors"},
+                    new Purchase{PurchaseDate=new DateTime(2021, 3, 15), Vendor="OK Pvt. Ltd."},
+                };
+
+                foreach (Purchase p in purchases)
+                {
+                    context.Purchases.Add(p);
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.PurchaseLineItems.Any())
+            {
+                var purchaseLineItems = new PurchaseLineItem[]
+                {
+                    new PurchaseLineItem{ProductId=1, Quantity=30, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=2, Quantity=20, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=3, Quantity=15, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=4, Quantity=6, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=7, Quantity=9, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=8, Quantity=28, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=9, Quantity=14, PurchaseId=1},
+                    new PurchaseLineItem{ProductId=10, Quantity=34, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=11, Quantity=22, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=12, Quantity=26, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=13, Quantity=59, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=14, Quantity=99, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=15, Quantity=65, PurchaseId=2},
+                    new PurchaseLineItem{ProductId=16, Quantity=53, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=17, Quantity=29, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=18, Quantity=46, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=19, Quantity=29, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=21, Quantity=19, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=22, Quantity=25, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=25, Quantity=32, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=26, Quantity=26, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=27, Quantity=22, PurchaseId=3},
+                    new PurchaseLineItem{ProductId=28, Quantity=18, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=29, Quantity=69, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=30, Quantity=47, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=32, Quantity=53, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=33, Quantity=42, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=35, Quantity=17, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=37, Quantity=23, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=39, Quantity=29, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=42, Quantity=56, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=45, Quantity=28, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=46, Quantity=19, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=47, Quantity=26, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=48, Quantity=35, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=49, Quantity=17, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=50, Quantity=38, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=52, Quantity=39, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=53, Quantity=29, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=55, Quantity=23, PurchaseId=4},
+                    new PurchaseLineItem{ProductId=57, Quantity=29, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=59, Quantity=46, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=60, Quantity=36, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=61, Quantity=22, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=62, Quantity=20, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=63, Quantity=37, PurchaseId=5},
+                    new PurchaseLineItem{ProductId=65, Quantity=25, PurchaseId=5},
+                };
+
+                foreach (PurchaseLineItem p in purchaseLineItems)
+                {
+                    context.PurchaseLineItems.Add(p);
+                }
+                context.SaveChanges();
+            }
             
         }
     }
