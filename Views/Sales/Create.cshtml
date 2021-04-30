@@ -1,4 +1,4 @@
-﻿@model XpertGroceryManager.Models.Sales
+﻿@model SalesViewModel
 
 @{
     ViewData["Title"] = "Sales";
@@ -14,37 +14,49 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="SalesDate" class="control-label"></label>
-                <input asp-for="SalesDate" class="form-control" />
-                <span asp-validation-for="SalesDate" class="text-danger"></span>
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Customer" class="control-label"></label>
-                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" class="form-control" asp-items="@((List<SelectListItem>)ViewData["customers"])">
                     <option value="">-- Select Customer --</option>
                 </select>
                 <span asp-validation-for="CustomerId" class="text-danger" />
             </div>
+            @{
+                Model.LineItems = new List<LineItemViewModel> {
+                    new LineItemViewModel(),
+                };
+
+                @foreach (var lineitem in Model.LineItems)
+                {
+                    <div class="p-2 mb-3 border">
+
+                        <div class="form-group">
+                            <label asp-for="@lineitem.Quantity" class="control-label"></label>
+                            <input asp-for="@lineitem.Quantity" class="form-control" />
+                            <span asp-validation-for="@lineitem.Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="@lineitem.ProductId" class="control-label"></label>
+                            <select asp-for="@lineitem.ProductId" class="form-control" asp-items="@((List<SelectListItem>)ViewData["products"])">
+                                <option value="">-- Select Product --</option>
+                            </select>
+                            <span asp-validation-for="@lineitem.ProductId" class="text-danger" />
+                        </div>
+
+                    </div>
+                }
+            }
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <table>
-                        <tr>
-                            @{
-                                List<XpertGroceryManager.Models.ViewModels.LineItemProductData> products = ViewBag.Products;
-
-                                
-                            @:</tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
-            </form>
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
 </div>
 
@@ -55,3 +67,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

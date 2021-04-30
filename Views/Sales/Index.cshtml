@@ -1,4 +1,4 @@
-﻿@model IEnumerable<XpertGroceryManager.Models.Sales>
+﻿@model List<SalesViewModel>
 
 @{
     ViewData["Title"] = "Sales";
@@ -15,21 +15,21 @@
 
 <div class="row mb-3">
     <div class="col-sm-8">
-        <p>List of Sales.</p>
+        <p>List of all Sales.</p>
     </div>
 </div>
 
-<table class="table">
-    <thead>
+<table class="table table-hover table-striped">
+    <thead class="thead-light">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                Id
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SalesDate)
+                Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customer)
+                Customer
             </th>
             <th>
                 Total
@@ -42,21 +42,20 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.SalesId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SalesDate)
+                    @Html.DisplayFor(modelItem => item.Date)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Name)
+                    @Html.DisplayFor(modelItem => item.CustomerName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Total)
+                    @Html.DisplayFor(modelItem => item.SalesTotal)
                 </td>
                 <td>
-                    <a class="badge badge-success action-button" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="badge badge-info action-button" asp-action="Details" asp-route-id="@item.SalesId">Details</a>
+                    <a class="badge badge-danger action-button" asp-action="Delete" asp-route-id="@item.SalesId">Delete</a>
                 </td>
             </tr>
         }

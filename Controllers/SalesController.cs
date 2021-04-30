@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,15 +22,49 @@ namespace XpertGroceryManager.Controllers
         }
 
         // GET: Sales
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sales
-                                               .Include(s => s.Customer)
-                                               .Include(s => s.LineItems);
-            return View(await applicationDbContext.ToListAsync());
+            var sales = await _context.Sales
+                .Include(s => s.Customer)
+                .Include(s => s.LineItems)
+                    .ThenInclude(li => li.Product)
+                .ToListAsync();
+            var salesViewModelList = new List<SalesViewModel>();
+            foreach (Sales s in sales)
+            {
+                var thisViewModel = new SalesViewModel
+                {
+                    SalesId = s.Id,
+                    Date = s.SalesDate,
+                    CustomerId = s.Customer.Id,
+                    CustomerName = s.Customer.Name,
+                    LineItems = GetLineItems(s)
+                };
+                salesViewModelList.Add(thisViewModel);
+            }
+            return View(salesViewModelList);
+        }
+
+        private List<LineItemViewModel> GetLineItems(Sales sales)
+        {
+            var lineItemViewModel = new List<LineItemViewModel>();
+            foreach (var lineitem in sales.LineItems)
+            {
+                var li = new LineItemViewModel
+                {
+                    ProductId = lineitem.ProductId,
+                    ProductName = lineitem.Product.Name,
+                    Quantity = lineitem.Quantity,
+                    UnitCost = lineitem.Product.Price
+                };
+                lineItemViewModel.Add(li);
+            }
+            return lineItemViewModel;
         }
 
         // GET: Sales/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,19 +85,30 @@ namespace XpertGroceryManager.Controllers
         }
 
         // GET: Sales/Create
+        [Authorize]
         public IActionResult Create()
         {
-            var sales = new Sales
-            {
-                LineItems = new List<SalesLineItem>()
-            };
-            PopulateProductsData(sales);
-            PopulateCustomersDropDownList();
-            return View();
+            var salesViewModel = new SalesViewModel();
+            var customers = _context.Customers
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Value = c.Id.ToString(),
+                                        Text = c.Name
+                                    });
+            var products = _context.Products
+                                    .Select(p => new SelectListItem
+                                    {
+                                        Value = p.Id.ToString(),
+                                        Text = p.Name
+                                    });
+            ViewData["customers"] = customers.ToList();
+            ViewData["products"] = products.ToList();
+            return View(salesViewModel);
         }
 
         // POST: Sales/Create
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SalesDate,CustomerId")] Sales sales,  string[] selectedProducts, string[] productQuantities)
         {
@@ -92,6 +138,7 @@ namespace XpertGroceryManager.Controllers
         }
 
         // GET: Sales/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,6 +162,7 @@ namespace XpertGroceryManager.Controllers
 
         // POST: Sales/Edit/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSales(int? id, string[] selectedProducts, string[] productQuantities)
         {
@@ -154,6 +202,7 @@ namespace XpertGroceryManager.Controllers
         }
 
         // GET: Sales/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -176,6 +225,7 @@ namespace XpertGroceryManager.Controllers
 
         // POST: Sales/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

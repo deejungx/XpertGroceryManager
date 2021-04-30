@@ -34,6 +34,18 @@
     <Compile Remove="Migrations\20210428043129_FirstMigration.Designer.cs" />
     <Compile Remove="Migrations\20210428114130_FirstMigration.cs" />
     <Compile Remove="Migrations\20210428114130_FirstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210429042241_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210429042241_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210429131838_ChangeUserModel.cs" />
+    <Compile Remove="Migrations\20210429131838_ChangeUserModel.Designer.cs" />
+    <Compile Remove="Migrations\20210429140721_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210429140721_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210429141216_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210429141216_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210429145911_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210429145911_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210429150929_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210429150929_InitialMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

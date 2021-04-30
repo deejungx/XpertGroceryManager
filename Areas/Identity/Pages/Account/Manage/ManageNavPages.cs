@@ -24,6 +24,8 @@ namespace XpertGroceryManager.Areas.Identity.Pages.Account.Manage
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
+        public static string ManageRoles => "ManageRoles";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
@@ -39,6 +41,8 @@ namespace XpertGroceryManager.Areas.Identity.Pages.Account.Manage
         public static string PersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, PersonalData);
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
+
+        public static string ManageRolesNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageRoles);
 
         private static string PageNavClass(ViewContext viewContext, string page)
         {
